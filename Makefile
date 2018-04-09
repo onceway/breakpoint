@@ -1,21 +1,27 @@
 LIB = libdownloadfile.a
 LIBPATH = lib
 SRCPATH = src
-OBJS = downloadfile.o
+DEMOPATH = demo
+DEMO = $(DEMOPATH)/demo
+SRCS = $(wildcard $(SRCPATH)/*.cpp)
+OBJS = $(patsubst %.cpp,%.o,$(SRCS))
 
-ALL: demo
+all: lib demo
 
-demo: demo.cpp $(LIB)
-	g++ $^ -o $(LIBPATH)/$@ -I. -L$LIBPATH -lcurl -ldownloadfile -g
+demo: $(DEMO)
+
+$(DEMO): $(DEMOPATH)/demo.cpp
+	g++ $^ -o $@ -I$(SRCPATH) -L$(LIBPATH) -lcurl -ldownloadfile -g
 
 lib: $(LIB)
 
 $(LIB) : $(OBJS)
 	ar cr $@ $(OBJS)
 	rm -f $(OBJS)
+	mv $(LIB) $(LIBPATH)
 
 %.o: %.cpp
 	g++ -g -c $< -o $@
 
 clean:
-	rm -rf $(LIBPATH)/demo
+	rm -rf $(DEMOPATH)/demo $(LIBPATH)/$(LIB)
