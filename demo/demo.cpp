@@ -13,8 +13,6 @@
 
 #define SKIP_VAR(a) (a = a);
 
-using namespace wenavi::data;
-
 CURL* g_curl;
 DownloadFile* g_downloadFile;
 bool g_stopFlag;
@@ -45,14 +43,14 @@ static size_t WriteFunc(char *str, size_t size, size_t nmemb, void *data)
 
 static int ProgressFunc(void *clientp, double dltotal, double dlnow, double ultotal, double ulnow)
 {
-  SKIP_VAR(clientp);
-  SKIP_VAR(dltotal);
-  SKIP_VAR(dlnow);
-  SKIP_VAR(ultotal);
-  SKIP_VAR(ulnow);
-  if (g_stopFlag)
-    return CURLE_ABORTED_BY_CALLBACK;
-  return CURLE_OK;
+	SKIP_VAR(clientp);
+	SKIP_VAR(dltotal);
+	SKIP_VAR(dlnow);
+	SKIP_VAR(ultotal);
+	SKIP_VAR(ulnow);
+	if (g_stopFlag)
+		return CURLE_ABORTED_BY_CALLBACK;
+	return CURLE_OK;
 }
 
 static bool StartDownload(const char* url)
@@ -71,8 +69,8 @@ static bool StartDownload(const char* url)
 	curl_easy_setopt(pCurl, CURLOPT_FOLLOWLOCATION, 1L);
 	curl_easy_setopt(pCurl, CURLOPT_RESUME_FROM, resumeSize);
 	curl_easy_setopt(pCurl, CURLOPT_WRITEFUNCTION, WriteFunc);
-  curl_easy_setopt(pCurl, CURLOPT_NOPROGRESS, 0L);
-  curl_easy_setopt(pCurl, CURLOPT_PROGRESSFUNCTION, ProgressFunc);
+	curl_easy_setopt(pCurl, CURLOPT_NOPROGRESS, 0L);
+	curl_easy_setopt(pCurl, CURLOPT_PROGRESSFUNCTION, ProgressFunc);
 
 	result = curl_easy_perform(pCurl);
 
@@ -86,7 +84,7 @@ static bool StartDownload(const char* url)
 
 static void CatchSignal(int)
 {
-  g_stopFlag = true;
+	g_stopFlag = true;
 }
 
 int main(int argc, char** argv)
@@ -119,11 +117,11 @@ int main(int argc, char** argv)
 	StartDownload(argv[1]);
 
 END:
-  if (g_downloadFile) {
-    g_downloadFile->Close();
-    delete g_downloadFile;
-    g_downloadFile = NULL;
-  }
+	if (g_downloadFile) {
+		g_downloadFile->Close();
+		delete g_downloadFile;
+		g_downloadFile = NULL;
+	}
 	curl_global_cleanup();
 	return 0;
 }
